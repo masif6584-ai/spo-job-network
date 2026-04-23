@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>SPO SMART DIGITAL JOB NETWORK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #020617; color: #f8fafc; font-family: 'system-ui'; overflow-x: hidden; }
+        .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.2); transition: 0.4s; }
+        .glass-card:hover { border-color: #38bdf8; box-shadow: 0 0 30px rgba(56, 189, 248, 0.3); transform: scale(1.02); }
+        .universe-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #1e293b 0%, #020617 100%); }
+    </style>
+</head>
+<body>
+    <div class="universe-bg"></div>
+    <div class="max-w-6xl mx-auto py-12 px-4">
+        <header class="text-center mb-16">
+            <h1 class="text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600 mb-4">SPO SMART DIGITAL VERSE</h1>
+            <p class="text-2xl text-cyan-100 italic">"آپ کی ہر ضرورت کا ایک ہی جگہ حل"</p>
+        </header>
+
+        <div id="job-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+    </div>
+
+    <script>
+        const REPO_URL = "https://raw.githubusercontent.com/MuhammadAsifAliSPO/spo-job-network/main/jobs.json";
+
+        async function initMegaPortal() {
+            const grid = document.getElementById('job-grid');
+            try {
+                const res = await fetch(REPO_URL);
+                const data = await res.json();
+                grid.innerHTML = data.map(job => `
+                    <div class="glass-card p-8 rounded-3xl">
+                        <span class="bg-cyan-900 text-cyan-300 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest">${job.dept}</span>
+                        <h2 class="text-2xl font-bold mt-4 mb-2 text-white">${job.title}</h2>
+                        <div class="text-gray-400 space-y-2 mb-8">
+                            <p>🎓 تعلیم: ${job.edu}</p>
+                            <p>📅 آخری تاریخ: <span class="text-red-400">${job.date}</span></p>
+                        </div>
+                        <a href="https://wa.me/923034480404?text=I want to apply for ${job.title}" 
+                           class="block text-center bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-4 rounded-xl transition shadow-lg">
+                           SPO کے ذریعے اپلائی کریں
+                        </a>
+                    </div>
+                `).join('');
+            } catch (e) {
+                grid.innerHTML = "<p class='text-center col-span-full'>سسٹم اپ ڈیٹ ہو رہا ہے، براہ کرم انتظار کریں...</p>";
+            }
+        }
+        initMegaPortal();
+    </script>
+</body>
+</html>
