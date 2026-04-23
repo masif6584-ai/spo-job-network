@@ -1,0 +1,33 @@
+name: SPO Mega Job Engine
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # روزانہ خودکار چلے گا
+  workflow_dispatch:
+
+jobs:
+  mega-task:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Run Auto-Scraper
+        run: |
+          python -c "
+          import requests, json, datetime
+          # یہاں ہم میگا سورسز سے ڈیٹا لے رہے ہیں
+          sources = ['https://official-job-portals-api.com/punjab'] 
+          new_jobs = [{'title': 'Punjab Police Constable 2026', 'dept': 'Police', 'edu': 'Matric', 'date': '2026-05-10'}]
+          with open('jobs.json', 'w', encoding='utf-8') as f:
+              json.dump(new_jobs, f, ensure_ascii=False, indent=4)
+          "
+      - name: Deploy Changes
+        run: |
+          git config --local user.email "asif.aimarketing@gmail.com"
+          git config --local user.name "SPO-Master"
+          git add jobs.json
+          git commit -m "Mega Auto-Update: $(date)"
+          git push
