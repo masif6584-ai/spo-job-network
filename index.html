@@ -2,45 +2,98 @@
 <html lang="ur" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>SPO SMART DIGITAL JOB NETWORK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Mega Job Network | Pakistan's Largest Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
     <style>
-        body { background: #020617; color: #f8fafc; font-family: sans-serif; }
-        .glass-card { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.2); transition: 0.4s; }
-        .glass-card:hover { border-color: #38bdf8; transform: scale(1.02); }
+        body { background: #010409; color: #e6edf3; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .urdu-font { font-family: 'Noto Nastaliq Urdu', serif; }
+        .glass-morphism { background: rgba(22, 27, 34, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(48, 54, 61, 1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8); }
+        .mega-gradient { background: linear-gradient(90deg, #58a6ff, #1f6feb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .search-glow:focus { box-shadow: 0 0 15px rgba(88, 166, 255, 0.5); outline: none; border-color: #58a6ff; }
+        .job-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .job-card:hover { transform: scale(1.03); border-color: #58a6ff; }
     </style>
 </head>
-<body class="p-5">
-    <div class="max-w-6xl mx-auto">
-        <header class="text-center mb-16">
-            <h1 class="text-5xl font-black text-cyan-400 mb-4">SPO SMART DIGITAL VERSE</h1>
-            <p class="text-xl text-cyan-100">"آپ کی ہر ضرورت کا ایک ہی جگہ حل"</p>
-        </header>
+<body class="bg-black">
 
-        <div id="job-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <header class="py-12 px-6 text-center border-b border-gray-800 glass-morphism sticky top-0 z-50">
+        <h1 class="text-4xl md:text-6xl font-black mb-4 mega-gradient tracking-tighter">SPO SMART DIGITAL VERSE</h1>
+        <p class="text-xl urdu-font text-gray-400">"آپ کی ہر ضرورت کا ایک ہی جگہ حل"</p>
+        
+        <div class="max-w-4xl mx-auto mt-8 flex flex-col md:flex-row gap-4">
+            <input type="text" id="jobSearch" placeholder="جاب کا نام یا محکمہ تلاش کریں..." 
+                   class="w-full p-4 rounded-xl bg-gray-900 border border-gray-700 search-glow text-right">
+            <select id="regionFilter" class="p-4 rounded-xl bg-gray-900 border border-gray-700 search-glow">
+                <option value="all">تمام پاکستان</option>
+                <option value="Punjab">پنجاب</option>
+                <option value="Federal">فیڈرل</option>
+                <option value="Forces">آرمڈ فورسز</option>
+            </select>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-12 px-6">
+        <div id="job-stats" class="mb-6 text-cyan-400 font-mono uppercase tracking-widest text-sm"></div>
+        
+        <div id="mega-job-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="col-span-full text-center py-20">
+                <div class="animate-spin inline-block w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mb-4"></div>
+                <p class="text-xl">میگا ڈیٹا بیس سے جابز لوڈ کی جا رہی ہیں...</p>
             </div>
-    </div>
+        </div>
+    </main>
 
     <script>
-        const API_URL = "https://raw.githubusercontent.com/masif6584-ai/spo-job-network/main/jobs.json";
-        async function loadMegaJobs() {
-            const grid = document.getElementById('job-grid');
+        const DATA_URL = "https://raw.githubusercontent.com/masif6584-ai/spo-job-network/main/jobs.json";
+        let allJobs = [];
+
+        async function initSPO() {
             try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
-                grid.innerHTML = data.map(job => `
-                    <div class="glass-card p-8 rounded-3xl text-right">
-                        <h2 class="text-2xl font-bold text-white mb-4">${job.title}</h2>
-                        <p class="text-gray-400 mb-6">🏛️ محکمہ: ${job.dept} | 🎓 تعلیم: ${job.edu}</p>
-                        <a href="https://wa.me/923034480404?text=I want to apply for ${job.title}" 
-                           class="block text-center bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 rounded-xl">
-                           SPO کے ذریعے اپلائی کریں
-                        </a>
-                    </div>
-                `).join('');
-            } catch (e) { grid.innerHTML = "<p>جابز لوڈ ہو رہی ہیں...</p>"; }
+                const response = await fetch(DATA_URL);
+                allJobs = await response.json();
+                renderJobs(allJobs);
+            } catch (err) {
+                document.getElementById('mega-job-grid').innerHTML = "ڈیٹا لوڈ کرنے میں دشواری پیش آ رہی ہے۔";
+            }
         }
-        loadMegaJobs();
+
+        function renderJobs(jobs) {
+            const grid = document.getElementById('mega-job-grid');
+            const stats = document.getElementById('job-stats');
+            stats.innerText = `دستیاب جابز: ${jobs.length}`;
+            
+            grid.innerHTML = jobs.map(job => `
+                <div class="job-card glass-morphism p-6 rounded-2xl flex flex-col justify-between border-l-4 border-l-blue-500">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-blue-900/50 text-blue-400 text-xs px-3 py-1 rounded-full border border-blue-500/30 font-bold">${job.dept}</span>
+                            <span class="text-gray-500 text-xs">${job.date}</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3 leading-tight text-white">${job.title}</h3>
+                        <div class="space-y-2 mb-6">
+                            <p class="text-sm text-gray-400">🎓 <span class="font-semibold text-gray-300">تعلیم:</span> ${job.edu}</p>
+                            <p class="text-sm text-gray-400">📍 <span class="font-semibold text-gray-300">مقام:</span> پاکستان</p>
+                        </div>
+                    </div>
+                    <a href="https://wa.me/923034480404?text=السلام علیکم! میں نے SPO پورٹل پر ${job.title} کی جاب دیکھی ہے۔ مجھے اس میں اپلائی کرنا ہے۔" 
+                       target="_blank"
+                       class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-center transition shadow-lg shadow-blue-900/20 active:scale-95">
+                       آن لائن اپلائی کریں (SPO)
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        // Search & Filter Logic
+        document.getElementById('jobSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = allJobs.filter(j => j.title.toLowerCase().includes(term) || j.dept.toLowerCase().includes(term));
+            renderJobs(filtered);
+        });
+
+        initSPO();
     </script>
 </body>
 </html>
