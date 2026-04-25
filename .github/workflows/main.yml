@@ -19,7 +19,16 @@
                   return sources
               except:
                   return []
-
+          new_jobs = [
+              {'title': 'Punjab Police Constable', 'dept': 'Police', 'edu': 'Matric', 'date': '2026-05-15'},
+              {'title': 'Secondary School Teacher (SST)', 'dept': 'Education', 'edu': 'MA/MSc', 'date': '2026-06-01'},
+              {'title': 'Data Entry Operator', 'dept': 'NADRA', 'edu': 'Intermediate', 'date': '2026-05-25'},
+              {'title': 'Junior Clerk (All Depts)', 'dept': 'Punjab Govt', 'edu': 'Intermediate', 'date': '2026-05-30'},
+              {'title': 'Lady Health Visitor (LHV)', 'dept': 'Health', 'edu': 'Nursing Dip', 'date': '2026-05-20'},
+              {'title': 'Assistant Sub-Inspector', 'dept': 'FPSC', 'edu': 'Graduation', 'date': '2026-06-10'},
+              {'title': 'Civilian Clerk Jobs', 'dept': 'Pak Army', 'edu': 'Matric/Inter', 'date': '2026-06-15'}
+          ]
+          
           full_data = get_real_jobs()
           with open('jobs.json', 'w', encoding='utf-8') as f:
               json.dump(full_data, f, ensure_ascii=False, indent=4)
